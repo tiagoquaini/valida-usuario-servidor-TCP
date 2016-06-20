@@ -96,8 +96,15 @@ public class ServidorTCP {
 	 * @throws IOException
 	 */
 	private static void validaUsuario(Usuario usuario, Socket cliente) throws IOException {
-		if (bancoUsuarios.containsKey(usuario.getUsername()))
-			enviaRetornoOK(cliente);
+		if (bancoUsuarios.containsKey(usuario.getUsername())) {
+			Usuario hashUser = bancoUsuarios.get(usuario.getUsername());
+			
+			if (hashUser.getSenha().equals(usuario.getSenha()) && 
+					hashUser.getUsername().equals(usuario.getUsername()))
+				enviaRetornoOK(cliente);
+			else 
+				enviaRetornoNOK(cliente);
+		}
 		else 
 			enviaRetornoNOK(cliente);
 	}
@@ -159,7 +166,7 @@ public class ServidorTCP {
 	 * @throws Exception
 	 */
 	private static void verificaDadosCorretos(String[] dados) throws Exception {
-		if ((dados.length != 3) || (dados[0] != "1" && dados[0] != "2")) 
+		if ((dados.length != 3) || (!dados[0].equals("1") && !dados[0].equals("2"))) 
 			throw new Exception("Entrada mal formada");
 	}
 }
